@@ -47,6 +47,9 @@ app.use(limiter);
 // Health
 app.get('/health', (req, res) => res.json({ ok: true, time: Date.now() }));
 
+// Preflight CORS pour /api/ai
+app.options('/api/ai', cors());
+
 // AI proxy endpoint
 
 app.post('/api/ai', async (req, res) => {
@@ -108,6 +111,8 @@ app.post('/api/ai', async (req, res) => {
 });
 
 // Endpoint pour générer PDF avec Typst
+app.options('/api/generate-pdf', cors());
+
 app.post('/api/generate-pdf', async (req, res) => {
     try {
         const { title, objectives, content } = req.body;
