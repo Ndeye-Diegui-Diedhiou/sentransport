@@ -1,0 +1,21 @@
+.statistique {
+background-color: #f0f0f0;
+border-left: 4px solid #0a6e31;
+padding: 15px 20px;
+margin: 10px;
+display: inline-block;
+min-width: 120px;
+text-align: center;
+}
+
+.stat-nombre {
+display: block;
+ font-size: 2rem;
+font-weight: bold;
+color: #0a6e31;
+}
+
+.stat-label {
+font-size: 0.9rem;
+color: #555;
+}
