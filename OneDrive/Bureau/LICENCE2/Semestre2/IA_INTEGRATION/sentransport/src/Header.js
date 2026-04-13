@@ -1,6 +1,6 @@
 import './ Header .css ';
 function Header () {
-    const today = new Date().toLocaleDateString();
+    const today = new Date().toLocaleDateString('fr-FR');
     return (
         <header className =" header ">
             <h1 className ="header - titre "> SenTransport </h1>
