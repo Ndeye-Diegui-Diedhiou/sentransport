@@ -1,0 +1,20 @@
+.header{
+    background-color : #0a6e31 ;
+    color : white ;
+    padding : 20px ;
+    text-align : center ;
+}
+.header-titre{
+    margin : 0;
+    font-size : 2 rem ;
+}
+.header-soustitre{
+    margin : 5px 0 0 0;
+    font-size : 1 rem ;
+    opacity : 0.9;
+}
+.header-date{
+    margin : 10px 0 0 0;
+    font-size : 0.9 rem ;
+    opacity : 0.75;
+}

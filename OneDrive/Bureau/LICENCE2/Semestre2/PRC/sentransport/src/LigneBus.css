@@ -1,0 +1,55 @@
+.ligne-bus {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    margin: 12px 0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-left: 5px solid #0a6e31;
+    box-shadow: 0 2px 8px rgba(10, 110, 49, 0.08);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ligne-bus:hover {
+    transform: translateX(6px);
+    box-shadow: 0 6px 16px rgba(10, 110, 49, 0.15);
+    background-color: #f8fffe;
+}
+
+.ligne-numero {
+    background: linear-gradient(135deg, #0a6e31 0%, #084c1f 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1.3rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 3px 8px rgba(10, 110, 49, 0.2);
+}
+
+.ligne-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ligne-trajet {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0a6e31;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+}
+
+.ligne-arrets {
+    font-size: 0.9rem;
+    color: #666666;
+    margin-top: 0;
+    line-height: 1.4;
+}
