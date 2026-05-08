@@ -1,7 +1,7 @@
 import LigneBus from './LigneBus';
 import './ListeLignes.css';
 
-function ListeLignes({ lignes }) {
+function ListeLignes({ lignes, ligneSelectionnee, onClickLigne }) {
     return (
         <div className="liste-lignes">
         <h2 className="liste-titre">Lignes Dakar Dem Dikk</h2>
@@ -9,11 +9,9 @@ function ListeLignes({ lignes }) {
         {lignes.map(ligne => (
             <LigneBus
             key={ligne.id}
-            numero={ligne.numero}
-            depart={ligne.depart}
-            arrivee={ligne.arrivee}
-            arrets={ligne.arrets}
-            couleur={ligne.couleur}
+            {...ligne}
+            estSelectionnee={ligneSelectionnee && ligneSelectionnee.id === ligne.id}
+            onClick={() => onClickLigne(ligne)}
             />
         ))}
         </div>

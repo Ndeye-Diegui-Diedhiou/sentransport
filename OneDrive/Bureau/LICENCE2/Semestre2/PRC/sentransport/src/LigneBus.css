@@ -53,3 +53,100 @@
     margin-top: 0;
     line-height: 1.4;
 }
+.ligne-bus-active {
+    border-left : 4px solid #e67e22 ;
+    background-color : #fef9f3 ;
+}
+.ligne-bus-active.ligne-numero {
+    background-color : #e67e22 ;
+}
+
+/* Container pour les arrêts en expansion */
+.ligne-arrets-expanded {
+    background-color: #f0f8f5;
+    border-left: 5px solid #0a6e31;
+    border-radius: 0 0 10px 10px;
+    padding: 0 16px 16px 16px;
+    margin: -12px 12px 12px 12px;
+    animation: expandDown 0.3s ease-out;
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+.arrets-titre {
+    margin: 16px 0 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a4f34;
+}
+
+.arrets-liste {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.arret-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #d5e8e2;
+    animation: slideInArret 0.4s ease-out backwards;
+}
+
+/* Animation échelonnée pour chaque arrêt */
+.arret-item:nth-child(1) { animation-delay: 0.05s; }
+.arret-item:nth-child(2) { animation-delay: 0.1s; }
+.arret-item:nth-child(3) { animation-delay: 0.15s; }
+.arret-item:nth-child(4) { animation-delay: 0.2s; }
+.arret-item:nth-child(5) { animation-delay: 0.25s; }
+.arret-item:nth-child(6) { animation-delay: 0.3s; }
+.arret-item:nth-child(7) { animation-delay: 0.35s; }
+.arret-item:nth-child(8) { animation-delay: 0.4s; }
+
+.arret-item:last-child {
+    border-bottom: none;
+}
+
+@keyframes slideInArret {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.arret-item .arret-numero {
+    background-color: #0a6e31;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-right: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(10, 110, 49, 0.2);
+}
+
+.arret-item .arret-nom {
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
