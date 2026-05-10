@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second React</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="react/react.js"></script>
+    <script src="react/react-dom.js"></script>
+    <script src="react/babel.js"></script>
+    <script type="text/babel" >
+    /* function App() {
+            return <h1>Hello, React!</h1>;
+        }*/
+        function App() {
+            return (
+                <div>
+                    <Joueur name="Mbappe" goals="200" assists="76" />
+                    <Joueur name="Yamal" goals="100" assists="59" />
+                    <Joueur name="Bachir" goals="20" assists="90" />
+                </div>
+            )
+        }
+
+        function Joueur({ name, goals, assists }) {
+            return <h3>I am {name}, I have {goals} goals and {assists} assists</h3>;  
+        }
+
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
