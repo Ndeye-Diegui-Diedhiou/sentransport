@@ -1,85 +1,109 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Header from './Header';
 import Recherche from './Recherche';
-import DetailLigne from './DetailLigne';
-import StatReseau from './StatReseau';
 import LigneBus from './LigneBus';
+import DetailLigne from './DetailLigne';
 import Footer from './Footer';
 
-const lignes = [
-  { id: 1, numero: "1", depart: "Parcelles Assainies", arrivee: "Plateau", arrets: 14, listeArrets: ["Parcelles U14", "Parcelles U10", "Camberene", "Patte d'Oie", "Grand Dakar", "Colobane", "Ponty", "Plateau"], couleur: "#3498db" },
-  { id: 2, numero: "7", depart: "Guediawaye", arrivee: "Place Obe", arrets: 18, listeArrets: ["Guediawaye", "Pikine", "Thiaroye", "Keur Massar", "Grand Yoff", "Parcelles", "Liberte 6", "Place Obe"], couleur: "#e74c3c" },
-  { id: 3, numero: "15", depart: "Pikine", arrivee: "Medina", arrets: 12, listeArrets: ["Pikine Centre", "Thiaroye Gare", "Hann", "Colobane", "Fass", "Medina"], couleur: "#f39c12" },
-  { id: 4, numero: "23", depart: "Ouakam", arrivee: "Grand Dakar", arrets: 10, listeArrets: ["Ouakam Village", "Mermoz", "Fann", "Point E", "Liberte 5", "Grand Dakar"], couleur: "#9b59b6" },
-  { id: 5, numero: "8", depart: "Almadies", arrivee: "Colobane", arrets: 16, listeArrets: ["Almadies", "Ngor", "Yoff", "Quest Foire", "Liberte 6", "Colobane"], couleur: "#1abc9c" },
-  { id: 6, numero: "12", depart: "Yoff", arrivee: "Sandaga", arrets: 11, listeArrets: ["Yoff Village", "Aeroport LSS", "Parcelles U17", "Grand Yoff", "HLM", "Sandaga"], couleur: "#34495e" }
-];
-
 function App() {
+  // États pour les données et la gestion du chargement/erreurs [cite: 624-626]
+  const [lignes, setLignes] = useState([]);
+  const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState(null);
+
+  // États pour l'interface utilisateur [cite: 627-629]
   const [recherche, setRecherche] = useState("");
   const [ligneSelectionnee, setLigneSelectionnee] = useState(null);
-  const [compteurRecherches, setCompteurRecherches] = useState(0);
 
-  const handleRecherche = (valeur) => {
-    setRecherche(valeur);
-    if (valeur.trim() !== "") {
-      setCompteurRecherches(prev => prev + 1);
-    }
-  };
+  // Hook useEffect pour récupérer les données au montage du composant [cite: 631-647]
+  useEffect(() => {
+    fetch("http://localhost:5000/lignes")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erreur serveur : " + response.status);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setLignes(data);
+        setChargement(false);
+      })
+      .catch((error) => {
+        setErreur(error.message);
+        setChargement(false);
+      });
+  }, []);
 
-  const handleClickLigne = (ligne) => {
-    if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
-      setLigneSelectionnee(null);
-    } else {
-      setLigneSelectionnee(ligne);
-    }
-  };
-
-  const lignesFiltrees = lignes.filter(l =>
+  // Logique de filtrage des lignes [cite: 648-654]
+  const lignesFiltrees = lignes.filter((l) =>
     l.depart.toLowerCase().includes(recherche.toLowerCase()) ||
     l.arrivee.toLowerCase().includes(recherche.toLowerCase()) ||
     l.numero.includes(recherche)
   );
 
+  // Gestion de la sélection d'une ligne [cite: 655-663]
+  function handleClickLigne(ligne) {
+    if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
+      setLigneSelectionnee(null);
+    } else {
+      setLigneSelectionnee(ligne);
+    }
+  }
+
+  // Rendu de l'état de chargement [cite: 664-671]
+  if (chargement) {
+    return (
+      <div className="App">
+        <Header />
+        <main className="contenu">
+          <p className="message-chargement">Chargement des lignes...</p>
+        </main>
+      </div>
+    );
+  }
+
+  // Rendu de l'état d'erreur [cite: 681-695]
+  if (erreur) {
+    return (
+      <div className="App">
+        <Header />
+        <main className="contenu">
+          <div className="message-erreur">
+            <p>Impossible de charger les lignes.</p>
+            <p className="erreur-detail">{erreur}</p>
+            <p>Verifiez que le serveur Flask est lance (python api/app.py).</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Rendu principal (succès) [cite: 696-733]
   return (
     <div className="App">
       <Header />
       <main className="contenu">
-        <div className="search-stats">
-          <p className="compteur-recherches">
-            Recherches effectuées : <strong>{compteurRecherches}</strong>
-          </p>
-          <Recherche valeur={recherche} onChange={handleRecherche} />
-        </div>
+        <Recherche valeur={recherche} onChange={setRecherche} />
 
-        <p className="resultat-count">
-          {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? 's' : ''} trouvée{lignesFiltrees.length > 1 ? 's' : ''}
+        <p className="resultat-recherche">
+          {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? 's' : ''}
+          {' '}trouvee{lignesFiltrees.length > 1 ? 's' : ''}
         </p>
 
-        <div className="liste-lignes">
-          {lignesFiltrees.length > 0 ? (
-            lignesFiltrees.map(ligne => (
-              <LigneBus
-                key={ligne.id}
-                {...ligne}
-                estSelectionnee={ligneSelectionnee && ligneSelectionnee.id === ligne.id}
-                onClick={() => handleClickLigne(ligne)}
-              />
-            ))
-          ) : (
-            <p className="no-result">Désolé, aucune ligne ne correspond à votre recherche.</p>
-          )}
-        </div>
+        {lignesFiltrees.map((ligne) => (
+          <LigneBus
+            key={ligne.id}
+            numero={ligne.numero}
+            depart={ligne.depart}
+            arrivee={ligne.arrivee}
+            arrets={ligne.arrets}
+            estSelectionnee={ligneSelectionnee && ligneSelectionnee.id === ligne.id}
+            onClick={() => handleClickLigne(ligne)}
+          />
+        ))}
 
-        {/* Détails s'affichent ici dès qu'une ligne est sélectionnée */}
-        {ligneSelectionnee && (
-          <div id="details-container">
-            <DetailLigne ligne={ligneSelectionnee} />
-          </div>
-        )}
-        
-        <StatReseau lignes={lignes}/>
+        {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
       </main>
       <Footer />
     </div>
