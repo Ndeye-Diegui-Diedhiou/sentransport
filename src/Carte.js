@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Carte.css';
@@ -11,6 +11,20 @@ L.Icon.Default.mergeOptions({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
+
+// --- Exercice 1 : icone orange pour l'arret le plus proche ---
+const iconeProche = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+    className: 'icone-arret-proche',
+});
+
+// icone par defaut explicite
+const iconeDefaut = new L.Icon.Default();
 
 // Calculer la distance entre 2 points GPS (km)
 function calculerDistance(lat1, lon1, lat2, lon2) {
@@ -26,10 +40,30 @@ function calculerDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-function Carte() {
+// --- Exercice 2 : composant bouton qui recentre la carte ---
+function BoutonRecentrer({ position }) {
+  const map = useMap(); // hook react-leaflet : acces a l'instance de la carte
+
+    const recentrer = () => {
+        if (position) {
+        map.setView(position, 15);
+        }
+    };
+
+    if (!position) return null;
+
+    return (
+        <button className="btn-recentrer" onClick={recentrer}>
+        📍 Centrer sur ma position
+        </button>
+    );
+    }
+
+    function Carte() {
     const [arrets, setArrets] = useState([]);
     const [positionUtilisateur, setPositionUtilisateur] = useState(null);
     const [arretProche, setArretProche] = useState(null);
+    const [troisArretsProches, setTroisArretsProches] = useState([]); // Exercice 3
     const DAKAR = [14.6928, -17.4467];
 
     // Charger les arrets depuis Flask
@@ -55,30 +89,31 @@ function Carte() {
         }
     }, []);
 
-    // Trouver l'arret le plus proche
+    // Trouver l'arret le plus proche + Exercice 3 : les 3 plus proches
     useEffect(() => {
         if (positionUtilisateur && arrets.length > 0) {
-        let proche = null;
-        let dMin = Infinity;
-        arrets.forEach(a => {
-            const d = calculerDistance(
+        const arretsAvecDistance = arrets.map(a => ({
+            ...a,
+            distance: calculerDistance(
             positionUtilisateur[0],
             positionUtilisateur[1],
             a.lat,
             a.lon
-            );
-            if (d < dMin) {
-            dMin = d;
-            proche = { ...a, distance: d };
-            }
-        });
-        setArretProche(proche);
+            )
+        }));
+
+        // Tri par distance croissante
+        arretsAvecDistance.sort((x, y) => x.distance - y.distance);
+
+        setArretProche(arretsAvecDistance[0]);
+        setTroisArretsProches(arretsAvecDistance.slice(0, 3)); // Exercice 3
         }
     }, [positionUtilisateur, arrets]);
 
     return (
         <div className="carte-container">
         <h2 className="carte-titre">Carte des arrets</h2>
+
         {arretProche && (
             <p className="arret-proche">
             Arret le plus proche :{" "}
@@ -86,24 +121,48 @@ function Carte() {
             {" "}({arretProche.distance.toFixed(1)} km)
             </p>
         )}
+
+        {/* Exercice 3 : liste des 3 arrets les plus proches */}
+        {troisArretsProches.length > 0 && (
+            <div className="liste-arrets-proches">
+            <p className="liste-titre">Les 3 arrets les plus proches :</p>
+            <ol>
+                {troisArretsProches.map(a => (
+                <li key={a.id}>
+                    <strong>{a.nom}</strong> — {a.distance.toFixed(1)} km
+                </li>
+                ))}
+            </ol>
+            </div>
+        )}
+
         <MapContainer center={DAKAR} zoom={13} className="carte">
             <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; OpenStreetMap"
             />
+
             {arrets.map(a => (
-            <Marker key={a.id} position={[a.lat, a.lon]}>
+            <Marker
+                key={a.id}
+                position={[a.lat, a.lon]}
+                icon={arretProche && a.id === arretProche.id ? iconeProche : iconeDefaut}
+            >
                 <Popup>
                 <strong>{a.nom}</strong><br />
-                Lignes : {a.lignes.join(", ")}
+                Lignes : {a.lignes ? a.lignes.join(", ") : "Non renseigné"}
                 </Popup>
             </Marker>
             ))}
+
             {positionUtilisateur && (
             <Marker position={positionUtilisateur}>
                 <Popup>Vous etes ici</Popup>
             </Marker>
             )}
+
+            {/* Exercice 2 : bouton de recentrage, doit etre DANS le MapContainer */}
+            <BoutonRecentrer position={positionUtilisateur} />
         </MapContainer>
         </div>
     );

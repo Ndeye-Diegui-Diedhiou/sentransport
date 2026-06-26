@@ -4,6 +4,8 @@ import Header from './Header';
 import Recherche from './Recherche';
 import LigneBus from './LigneBus';
 import DetailLigne from './DetailLigne';
+import Meteo from './Meteo';
+import SignalerIncident from './SignalerIncident';
 import Carte from './Carte';
 import Footer from './Footer';
 
@@ -107,13 +109,7 @@ function App() {
     <div className="App">
       <Header />
       <main className="contenu">
-        {/* --- EXERCICE 1 : Bouton Recharger --- */}
-        <div className="zone-actions">
-          <button className="btn-recharger" onClick={chargerLignes}>
-            🔄 Recharger les données
-          </button>
-        </div>
-
+        <Meteo />
         <Recherche valeur={recherche} onChange={setRecherche} />
 
         <p className="resultat-recherche">
@@ -137,6 +133,7 @@ function App() {
 
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
         <Carte />
+        <SignalerIncident />
       </main>
       <Footer />
     </div>

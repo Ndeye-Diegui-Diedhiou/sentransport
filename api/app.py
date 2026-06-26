@@ -23,7 +23,7 @@ def charger_arrets():
 def accueil():
     return jsonify({
         "message": "Bienvenue sur l'API SenTransport !",
-        "endpoints": ["/lignes", "/lignes/<id>", "/arrets", "/stats", "/lignes/recherche", "/arrets/liste-noms"]
+        "endpoints": ["/lignes", "/lignes/<id>", "/arrets", "/stats", "/lignes/recherche", "/arrets/liste-noms", "/incidents"]
     })
 
 @app.route("/arrets")
@@ -32,7 +32,6 @@ def get_arrets():
 
 @app.route("/arrets/liste-noms")
 def get_arrets_noms():
-    # Liste de tous les noms d'arrêts sans doublons (à partir des lignes)
     lignes = charger_donnees()
     tous_les_arrets = []
     for ligne in lignes:
@@ -80,6 +79,27 @@ def get_ligne(ligne_id):
     if ligne is None:
         return jsonify({"erreur": "Ligne non trouvee"}), 404
     return jsonify(ligne)
+
+incidents = []
+
+@app.route("/incidents", methods=["GET"])
+def get_incidents():
+    return jsonify(incidents)
+
+@app.route("/incidents", methods=["POST"])
+def post_incident():
+    data = request.get_json()
+    if not data or "ligne" not in data or "description" not in data:
+        return jsonify({"erreur": "Champs requis manquants"}), 400
+
+    incident = {
+        "id": len(incidents) + 1,
+        "ligne": data["ligne"],
+        "description": data["description"],
+        "lieu": data.get("lieu", "Non precise"),
+    }
+    incidents.append(incident)
+    return jsonify(incident), 201
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
