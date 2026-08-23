@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+﻿# SenTransport - Guide du transport en commun à Dakar
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+SenTransport est une application full-stack (React & Flask) permettant de consulter, rechercher et analyser les lignes de transport en commun à Dakar. 
 
-## Available Scripts
+Ce projet a été réalisé dans le cadre des travaux pratiques (PRC - Programmation Réseau et Client).
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Fonctionnalités
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 💻 Client (React)
+- **Affichage des lignes** : Liste dynamique des lignes de bus avec numéro, trajets (Départ ➔ Arrivée) et nombre d'arrêts.
+- **Recherche en temps réel** : Filtrage instantané des lignes par numéro, ville de départ ou d'arrivée.
+- **Chargement à la demande** : Clic sur une ligne pour récupérer ses détails complets (liste complète des arrêts) en temps réel depuis l'API.
+- **Rechargement dynamique** : Bouton permettant de rafraîchir les données de l'API sans recharger la page ou redémarrer le serveur.
+- **Gestion des états** : Écrans de chargement et de gestion d'erreurs (si le serveur API est hors ligne).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### ⚙️ Serveur API (Flask)
+- **Données dynamiques** : Lecture en temps réel du fichier de données lignes_ddd.json sans besoin de redémarrer le serveur à chaque modification.
+- **Endpoints REST** :
+  - GET / : Accueil & liste des routes disponibles.
+  - GET /lignes : Renvoie la liste de toutes les lignes de bus.
+  - GET /lignes/<id> : Renvoie les détails complets d'une ligne spécifique.
+  - GET /arrets : Renvoie la liste unique de tous les arrêts du réseau (sans doublons).
+  - GET /stats : Fournit des statistiques sur le réseau (nombre de lignes, nombre total d'arrêts, ligne avec le plus d'arrêts).
+  - GET /lignes/recherche?q=... : Recherche de lignes par mot-clé (départ ou arrivée).
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Installation et Démarrage
 
-### `npm run build`
+### Prérequis
+- [Node.js](https://nodejs.org/) (version 16+)
+- [Python 3](https://www.python.org/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Démarrage de l'API (Backend)
+Allez dans le dossier pi/ :
+`ash
+cd api
+`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Installez les dépendances nécessaires :
+`ash
+pip install flask flask-cors
+`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Lancez le serveur Flask :
+`ash
+python app.py
+`
+Le serveur sera disponible sur http://localhost:5000.
 
-### `npm run eject`
+### 2. Démarrage de l'Application React (Frontend)
+Revenez à la racine du projet et installez les modules Node :
+`ash
+npm install
+`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Lancez le client React :
+`ash
+npm start
+`
+L'application s'ouvrira automatiquement dans votre navigateur à l'adresse http://localhost:3000.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📂 Structure du Projet
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+`	ext
+sentransport/
+├── api/
+│   ├── app.py             # Code de l'API Flask
+│   └── lignes_ddd.json    # Base de données JSON
+├── public/                # Fichiers publics React
+└── src/                   # Composants React
+    ├── App.js             # Composant principal (Logique & State)
+    ├── App.css            # Styles de l'application
+    ├── Header.js          # En-tête de l'application
+    ├── Footer.js          # Pied de page
+    ├── LigneBus.js        # Composant d'affichage d'une ligne
+    ├── DetailLigne.js     # Composant d'affichage des détails d'une ligne
+    └── Recherche.js       # Composant de barre de recherche
+`
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 📝 Licence
+Projet académique - LICENCE 2 - Semestre 2.

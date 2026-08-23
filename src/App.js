@@ -6,6 +6,7 @@ import LigneBus from './LigneBus';
 import DetailLigne from './DetailLigne';
 import Meteo from './Meteo';
 import SignalerIncident from './SignalerIncident';
+import ListeIncidents from './ListeIncidents';
 import Carte from './Carte';
 import Footer from './Footer';
 
@@ -134,6 +135,7 @@ function App() {
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
         <Carte />
         <SignalerIncident />
+        <ListeIncidents />
       </main>
       <Footer />
     </div>

@@ -16,6 +16,8 @@
 .meteo-icone {
     width: 50px;
     height: 50px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
 }
 
 .meteo-temp {
@@ -36,7 +38,7 @@
     margin-left: auto;
 }
 
-.meteo-bbalerte {
+.meteo-alerte {
     margin-top: 8px;
     padding: 8px 12px;
     border-radius: 6px;
@@ -44,9 +46,9 @@
 }
 
 .alerte-pluie {
-    background: #fce4ec;
-    color: #c62828;
-    border-left: 4px solid #c62828;
+    background: #fff3e0;
+    color: #e65100;
+    border-left: 4px solid #e65100;
 }
 
 .alerte-orage {
@@ -64,3 +66,39 @@
     font-family: monospace;
     font-size: 0.85rem;
     }
+
+
+.meteo-previsions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.prevision-jour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.prevision-nom-jour {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.85rem;
+}
+
+.prevision-icone {
+    width: 36px;
+    height: 36px;
+}
+
+.prevision-temp {
+    font-weight: 600;
+    color: #3498db;
+}
+
